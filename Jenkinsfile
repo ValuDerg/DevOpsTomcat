@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DEPLOY_DIR = '/home/valu/Documents/devops-webpage'
+        DEPLOY_DIR = '/home/valu/Documents/devops-webpage/DevOpsTomcat'
         REPO_URL   = 'https://github.com/ValuDerg/DevOpsTomcat'
         BRANCH     = 'main'
     }
@@ -37,7 +37,7 @@ pipeline {
                             --name tomcat \
                             --restart unless-stopped \
                             -p 8888:8080 \
-                            -v /home/valu/Documents/devops-webpage:/usr/local/tomcat/webapps/ROOT \
+                            -v /home/valu/Documents/devops-webpage/DevOpsTomcat:/usr/local/tomcat/webapps/ROOT \
                             tomcat:11
                     """
                 }
