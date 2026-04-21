@@ -7,24 +7,13 @@ services:
     user: root                          # needed to run Docker CLI commands on the host socket
     ports:
       - "8080:8080"                     # Jenkins web UI
-      - "50000:50000"                   # Jenkins agent port (optional but conventional)
+      - "50000:50000"                   # Jenkins agent port
     volumes:
       - jenkins_home:/var/jenkins_home  # persistent Jenkins data
       - /var/run/docker.sock:/var/run/docker.sock   # lets Jenkins talk to the host Docker daemon
       - /usr/bin/docker:/usr/bin/docker             # Docker CLI binary inside the container
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # remove for first-run wizard
-
-  tomcat:
-    image: tomcat:11
-    container_name: tomcat
-    restart: unless-stopped
-    ports:
-      - "8888:8080"                     # Tomcat on host port 8888 to avoid clash with Jenkins
-    volumes:
-      - /home/valu/Documents/devops-webpage:/usr/local/tomcat/webapps/ROOT
-      # Mounts the host directory directly as the ROOT webapp.
-      # Any files Jenkins writes there are served immediately by Tomcat.
 
 volumes:
   jenkins_home:
