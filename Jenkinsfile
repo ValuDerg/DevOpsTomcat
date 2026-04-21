@@ -28,21 +28,16 @@ pipeline {
         stage('Redeploy Tomcat') {
             steps {
                 script {
-                    sh """
-                        # Stop Tomcat
-                        docker kill tomcat
-                    
-                        # Remove Tomcat
-                        docker rm -f tomcat || true
-
-                        # Start Tomcat
-                        docker run -d \
-                            --name tomcat \
-                            --restart unless-stopped \
-                            -p 8888:8080 \
-                            -v ${DEPLOY_DIR}:${TOMCAT_DIR} \
-                            tomcat:11
-                    """
+                   sh """
+                        docker rm -f tomcat 2>/dev/null || true
+                        
+                        docker run -d \\
+                        --name tomcat \\
+                        --restart unless-stopped \\
+                        -p 8888:8080 \\
+                        -v ${DEPLOY_DIR}:${TOMCAT_DIR} \\
+                        tomcat:11
+                      """
                 }
             }
         }
