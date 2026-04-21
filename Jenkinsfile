@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DEPLOY_DIR = '/home/valu/Documents/devops-webpage/DevOpsTomcat'
+        TOMCAT_DIR = '/usr/local/tomcat/webapps/ROOT'
         REPO_URL   = 'https://github.com/ValuDerg/DevOpsTomcat'
         BRANCH     = 'main'
     }
@@ -28,16 +29,18 @@ pipeline {
             steps {
                 script {
                     sh """
-                        # Only remove and recreate Tomcat.
-                        # Never touch the Jenkins container — it is running this pipeline.
+                        # Stop Tomcat
+                        docker kill tomcat
+                    
+                        # Remove Tomcat
                         docker rm -f tomcat || true
 
-                        # Start Tomcat with plain docker run — no compose needed at runtime.
+                        # Start Tomcat
                         docker run -d \
                             --name tomcat \
                             --restart unless-stopped \
                             -p 8888:8080 \
-                            -v /home/valu/Documents/devops-webpage/DevOpsTomcat:/usr/local/tomcat/webapps/ROOT \
+                            -v ${DEPLOY_DIR}:${TOMCAT_DIR} \
                             tomcat:11
                     """
                 }
@@ -48,10 +51,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment complete. Tomcat is serving the updated content.'
+            echo 'SUCCESS: Deployment complete.'
         }
         failure {
-            echo 'Pipeline failed. Check the stage logs above for details.'
+            echo 'ERROR: Check the stage logs above for details.'
         }
     }
 }
