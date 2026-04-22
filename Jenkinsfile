@@ -14,13 +14,14 @@ pipeline {
             steps {
                 script {
                     sh """
-                        if [ -n "${DEPLOY_DIR}" ] && [ -d "${DEPLOY_DIR}" ]; then
-                            rm -rf "${DEPLOY_DIR}"
+                        if [ -d "${DEPLOY_DIR}/.git" ]; then
+                            cd "${DEPLOY_DIR}"
+                            git fetch origin
+                            git reset --hard origin/${BRANCH}
+                        else
+                            git clone --branch ${BRANCH} ${REPO_URL} ${DEPLOY_DIR}
                         fi
-        
-                        echo "Cloning fresh repository..."
-                        git clone --branch ${BRANCH} ${REPO_URL} ${DEPLOY_DIR}
-                    """
+                       """
                 }
             }
         }
