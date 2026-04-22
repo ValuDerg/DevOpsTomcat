@@ -4,16 +4,16 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     restart: unless-stopped
-    user: root                          # needed to run Docker CLI commands on the host socket
+    user: root
     ports:
-      - "8080:8080"                     # Jenkins web UI
-      - "50000:50000"                   # Jenkins agent port
+      - "8080:8080"
+      - "50000:50000"
     volumes:
-      - jenkins_home:/var/jenkins_home  # persistent Jenkins data
-      - /var/run/docker.sock:/var/run/docker.sock   # lets Jenkins talk to the host Docker daemon
-      - /usr/bin/docker:/usr/bin/docker             # Docker CLI binary inside the container
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
     environment:
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # remove for first-run wizard
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
 volumes:
   jenkins_home:
